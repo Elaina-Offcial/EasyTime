@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <thread>
 #include "EasyTime.h"
 using namespace std;
 using namespace EasyTime;
@@ -13,25 +14,19 @@ using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
 static long long NanoLength = 1000000000;
 time_t EasyTime::GetUnixTime(time_t HighResolutionTime)
 {
-    cout << "high:" << HighResolutionTime << endl;
-    string StringTime = to_string(HighResolutionTime);
-    string UnixTime = StringTime.substr(0, 10);
-    return stoll(UnixTime);
+    return HighResolutionTime / NanoLength;
 }
 
 time_t EasyTime::GetNanoTime(time_t HighResolutionTime)
 {
-    string StringTime = to_string(HighResolutionTime);
-    string NanoTime = StringTime.substr(10, 9);
-    return stoll(NanoTime);
-    //return HighResolutionTime % NanoLength;
+    return HighResolutionTime % NanoLength;
 }
 
 Clock EasyTime::GetCurrentTime()
 {
     struct tm *time;
     using namespace std;
-    time_t HighResolutionTime = std::chrono::system_clock::now().time_since_epoch().count();
+    time_t HighResolutionTime = std::chrono::system_clock::now().time_since_epoch().count() * 100;
     time_t UnixTime = GetUnixTime(HighResolutionTime);
     time_t NanoTime = GetNanoTime(HighResolutionTime);
     time = localtime(&UnixTime);
@@ -51,7 +46,7 @@ Clock EasyTime::GetCurrentTime()
 Clock EasyTime::GetCurrentTime(long long UTC)
 {
     struct tm *time;
-    time_t HighResolutionTime = std::chrono::system_clock::now().time_since_epoch().count();
+    time_t HighResolutionTime = std::chrono::system_clock::now().time_since_epoch().count() * 100 + UTC * 3600 * NanoLength;
     cout << HighResolutionTime << endl;
     time_t UnixTime = GetUnixTime(HighResolutionTime);
     time_t NanoTime = GetNanoTime(HighResolutionTime);
@@ -76,7 +71,7 @@ Clock EasyTime::StampToTime(time_t Stamp)
     time_t UnixTime = GetUnixTime(HighResolutionTime);
     time_t NanoTime = GetNanoTime(HighResolutionTime);
     time = localtime(&UnixTime);
-    Clock CurrentTime =
+    Clock Time =
     {
         time->tm_year + 1900,
         time->tm_mon + 1,
@@ -86,13 +81,33 @@ Clock EasyTime::StampToTime(time_t Stamp)
         time->tm_sec,
         NanoTime
     };
-    return CurrentTime;
+    return Time;
 }
 
 Clock EasyTime::StampToTime(time_t Stamp, long long UTC)
 {
     struct tm *time;
     time_t HighResolutionTime = Stamp + UTC * 3600;
+    time_t UnixTime = GetUnixTime(HighResolutionTime);
+    time_t NanoTime = GetNanoTime(HighResolutionTime);
+    time = localtime(&UnixTime);
+    Clock Time =
+    {
+        time->tm_year + 1900,
+        time->tm_mon + 1,
+        time->tm_mday,
+        time->tm_hour,
+        time->tm_min,
+        time->tm_sec,
+        NanoTime
+    };
+    return Time;
+}
+
+Clock EasyTime::HighResolutionStampToTime(time_t HighResolutionStamp)
+{
+    struct tm *time;
+    time_t HighResolutionTime = HighResolutionStamp * 100;
     time_t UnixTime = GetUnixTime(HighResolutionTime);
     time_t NanoTime = GetNanoTime(HighResolutionTime);
     time = localtime(&UnixTime);

@@ -6,18 +6,22 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <thread>
 #include "EasyTime.h"
 using namespace EasyTime;
 using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
 int main()
 {
-    //Clock TimeNow = GetCurrentTime(+8);
-    //PrintTime(TimeNow);
+   /* Clock TimeNow = GetCurrentTime();
+    PrintTime(TimeNow);*/
     using namespace std;
-    cout << chrono::steady_clock::now().time_since_epoch().count() << endl;
-    cout << chrono::system_clock::now().time_since_epoch().count() << endl;
-    cout << chrono::high_resolution_clock().now().time_since_epoch().count() << endl;
-    cout << std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count() << endl;
+    using namespace std::chrono;
+    utc_time<nanoseconds> t = utc_clock::now();
+    sys_time<nanoseconds> st = utc_clock::to_sys(t);
+    seconds n{ 8 * 3600 };
+    st += n;
+    cout << st.time_since_epoch().count() << endl;
+    cout << st << endl;
    /* Timer t1;
     t1.begin();
     for (int i = 0; i < 100; i++)

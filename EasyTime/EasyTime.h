@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <thread>
 using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
 namespace EasyTime
 {
@@ -25,6 +26,7 @@ namespace EasyTime
     Clock GetCurrentTime(long long UTC);
     Clock StampToTime(time_t Stamp);
     Clock StampToTime(time_t Stamp, long long UTC);
+    Clock HighResolutionStampToTime(time_t HighResolutionStamp);
     void PrintTime(Clock Time);
     class Timer
     {
