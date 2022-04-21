@@ -7,40 +7,39 @@
 #include <cstdlib>
 #include <cstdio>
 #include <thread>
-using TimePoint = std::chrono::time_point<std::chrono::steady_clock>;
+#include <sstream>
+using namespace std::chrono;
+using std::string;
 namespace EasyTime
 {
-    struct Clock
-    {
-        time_t year;
-        time_t month;
-        time_t day;
-        time_t hour;
-        time_t minute;
-        time_t second;
-        time_t nanosecond;
-    };
-    time_t GetUnixTime(time_t HighResolutionTime);
-    time_t GetNanoTime(time_t HighResolutionTime);
-    Clock GetCurrentTime();
-    Clock GetCurrentTime(long long UTC);
-    Clock StampToTime(time_t Stamp);
-    Clock StampToTime(time_t Stamp, long long UTC);
-    Clock HighResolutionStampToTime(time_t HighResolutionStamp);
-    void PrintTime(Clock Time);
-    class Timer
-    {
-    private:
-        TimePoint BeginPoint;
-        TimePoint EndPoint;
-        time_t Duration;//ns
-    public:
-        Timer();
-        ~Timer();
-        void begin();
-        void end();
-        void clear();
-        time_t GetDuration();
-    };
-
+	class Clock
+	{
+	private:
+		std::string year;
+		std::string month;
+		std::string day;
+		std::string hour;
+		std::string minute;
+		std::string second;
+		std::string millisecond;
+		std::string microsecond;
+		std::string nanosecond;
+	public:
+		Clock();
+		Clock(string Year, string Month, string Day, string Hour, string Minute, string Second, string Millisecond, string Microsecond, string Nanosecond);
+		string GetYear();
+		string GetMonth();
+		string GetDay();
+		string GetHour();
+		string GetMinute();
+		string GetSecond();
+		string GetMillisecond();
+		string GetMicrosecond();
+		string GetNanosecond();
+		friend Clock GetCurrentTime(int UTC);
+		void PrintTime();
+	};
+	enum TimeResolution { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
+	Clock GetCurrentTime(int UTC);
+	void PrintTime(Clock time, TimeResolution resolution);
 }
