@@ -26,12 +26,5 @@ int main()
     Clock ct = EasyTime::GetCurrentTime(+8);
     ct.print();
     print(ct);
-    //print(ct);
-    //Clock ct2 = ct;
-    //ct2.clear();
-    //ct2.PrintTime();
-    //Clock c3;
-    ////c3 += 1day; 
-    //c3.PrintTime();
     return 0;
 }
