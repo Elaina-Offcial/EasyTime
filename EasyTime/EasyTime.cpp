@@ -22,12 +22,12 @@ EasyTime::Clock::Clock(const sys_time<nanoseconds> systime, const string Year, c
 
 }
 
-EasyTime::Clock::Clock(const Clock &time): year(time.year), month(time.month), day(time.day), hour(time.hour), minute(time.minute), second(time.second), millisecond(time.millisecond), microsecond(time.microsecond), nanosecond(time.nanosecond)
+EasyTime::Clock::Clock(const Clock &time): SysTime(time.SysTime), year(time.year), month(time.month), day(time.day), hour(time.hour), minute(time.minute), second(time.second), millisecond(time.millisecond), microsecond(time.microsecond), nanosecond(time.nanosecond)
 {
 
 }
 
-string EasyTime::Clock::Get(const EasyTime::Resolution &r)
+string EasyTime::Clock::get(const EasyTime::Resolution &r)
 {
 	switch (r)
 	{
@@ -80,7 +80,12 @@ Clock EasyTime::GetCurrentTime(const int &UTC)
 	return CurrentTime;
 }
 
-void EasyTime::Clock::PrintTime()
+void EasyTime::Clock::print()
+{
+	std::cout << this->SysTime << std::endl;
+}
+
+void EasyTime::Clock::PrintHighResolutionTime()
 {
 	std::cout << this->year << "/"
 			  << this->month << "/"
@@ -96,7 +101,7 @@ EasyTime::Clock::~Clock()
 	
 }
 
-void EasyTime::Clock::Clear()
+void EasyTime::Clock::clear()
 {
 	this->SysTime-= nanoseconds{ this->SysTime.time_since_epoch() };
 	this->year = "1970";
@@ -112,6 +117,7 @@ void EasyTime::Clock::Clear()
 
 Clock EasyTime::Clock::operator=(const Clock &time)
 {
+	this->SysTime = time.SysTime;
 	this->year = time.year;
 	this->month = time.month;
 	this->day = time.day;

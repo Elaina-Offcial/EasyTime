@@ -19,15 +19,13 @@ using EasyTime::Resolution::Microsecond;
 using EasyTime::Resolution::Nanosecond;
 void print(Clock c)
 {
-	std::cout << c.Get(Year) << "-" << c.Get(Month) << "-" << c.Get(Day) << " " << c.Get(Hour) << ":" << c.Get(Minute) << ":" << c.Get(Second) /* << "." << c.get(Nanosecond) */ << std::endl;
+	std::cout << c.get(Year) << "-" << c.get(Month) << "-" << c.get(Day) << " " << c.get(Hour) << ":" << c.get(Minute) << ":" << c.get(Second) /* << "." << c.get(Nanosecond) */ << std::endl;
 }
 int main()
 {
-    while (1)
-    {
-        Clock ct = EasyTime::GetCurrentTime(+8);
-        print(ct);
-    }
+    Clock ct = EasyTime::GetCurrentTime(+8);
+    ct.print();
+    print(ct);
     //print(ct);
     //Clock ct2 = ct;
     //ct2.clear();

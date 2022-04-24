@@ -30,11 +30,12 @@ namespace EasyTime
 		Clock();
 		Clock(const sys_time<nanoseconds> systime, const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond);
 		Clock(const Clock &time);
-		string Get(const Resolution &r);
-		friend Clock GetCurrentTime(const int &UTC);
-		void PrintTime();
 		~Clock();
-		void Clear();
+		string get(const Resolution &r);
+		friend Clock GetCurrentTime(const int &UTC);
+		void print();
+		void PrintHighResolutionTime();
+		void clear();
 		Clock operator=(const Clock &time);
 		template <typename T> Clock operator+(duration<T> interval);
 		template <typename T> Clock operator+=(const T &interval);
