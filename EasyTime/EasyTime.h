@@ -12,11 +12,9 @@ using namespace std::chrono;
 using std::string;
 namespace EasyTime
 {
-	enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Microsecond, Nanosecond };
-	class Clock
+	class frame
 	{
-	private:
-		sys_time<nanoseconds> SysTime;
+	protected:
 		std::string year;
 		std::string month;
 		std::string day;
@@ -27,8 +25,21 @@ namespace EasyTime
 		std::string microsecond;
 		std::string nanosecond;
 	public:
+		frame();
+		frame(const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond);
+	};
+}
+
+namespace EasyTime
+{
+	enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Microsecond, Nanosecond };
+	class Clock : public frame
+	{
+	private:
+		sys_time<nanoseconds> systime;
+	public:
 		Clock();
-		Clock(const sys_time<nanoseconds> systime, const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond);
+		Clock(const sys_time<nanoseconds> Systime, const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond);
 		Clock(const Clock &time);
 		~Clock();
 		string get(const Resolution &r);
@@ -40,14 +51,25 @@ namespace EasyTime
 		template <typename T> Clock operator+(duration<T> interval);
 		template <typename T> Clock operator+=(const T &interval);
 	};
-	//enum TimeResolution { year, month, day, hour, minute, second, millisecond, microsecond, nanosecond };
 	Clock GetCurrentTime(const int &UTC);
 
 }
+
+namespace EasyTime
+{
+	class Duration : public frame
+	{
+	private:
+		duration<nanoseconds> duration;
+	public:
+		
+	};
+}
+
 namespace EasyTime
 {
 
-	template<typename T>
+	/*template<typename T>
 	inline Clock EasyTime::Clock::operator+(duration<T> interval)
 	{
 		this->SysTime += interval;
@@ -59,5 +81,5 @@ namespace EasyTime
 	{
 		this->SysTime += interval;
 		return *this;
-	}
+	}*/
 }

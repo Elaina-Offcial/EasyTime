@@ -26,5 +26,7 @@ int main()
     Clock ct = EasyTime::GetCurrentTime(+8);
     ct.print();
     print(ct);
+    Clock ct2 = ct;
+    ct2.print();
     return 0;
 }
