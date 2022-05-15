@@ -1,4 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+#ifndef EASYTIME_H_
+#define EASYTIME_H_
 #include <iostream>
 #include <chrono>
 #include <ctime>
@@ -9,10 +11,12 @@
 #include <thread>
 #include <sstream>
 using namespace std::chrono;
+using namespace std::chrono_literals;
 using std::string;
+//class TimeFrame
 namespace EasyTime
 {
-	class frame
+	class TimeFrame
 	{
 	protected:
 		std::string year;
@@ -25,61 +29,71 @@ namespace EasyTime
 		std::string microsecond;
 		std::string nanosecond;
 	public:
-		frame();
-		frame(const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond);
+		TimeFrame();
+		TimeFrame(const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond);
 	};
 }
-
+//class Clock
 namespace EasyTime
 {
 	enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Microsecond, Nanosecond };
-	class Clock : public frame
+	class EasyClock : public TimeFrame
 	{
 	private:
 		sys_time<nanoseconds> systime;
 	public:
-		Clock();
-		Clock(const sys_time<nanoseconds> Systime, const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond);
-		Clock(const Clock &time);
-		~Clock();
+		EasyClock();
+		EasyClock(const sys_time<nanoseconds> &Systime);
+		EasyClock(const sys_time<nanoseconds> &Systime, const string &Year, const string &Month, const string &Day, const string &Hour, const string &Minute, const string &Second, const string &Millisecond, const string &Microsecond, const string &Nanosecond);
+		EasyClock(const EasyClock &time);
+		~EasyClock();
 		string get(const Resolution &r);
-		friend Clock GetCurrentTime(const int &UTC);
+		friend EasyClock GetCurrentTime(const int &UTC);
+		long long GetHighResolutionStamp();
 		void print();
-		void PrintHighResolutionTime();
 		void clear();
-		Clock operator=(const Clock &time);
-		template <typename T> Clock operator+(duration<T> interval);
-		template <typename T> Clock operator+=(const T &interval);
+		EasyClock operator=(const EasyClock &time);
+		template <typename R, typename T> EasyClock operator+(const std::chrono::duration<R, T> &interval);
+		template <typename R, typename T> EasyClock operator+=(const std::chrono::duration<R, T> &interval);
+		template <typename R, typename T> EasyClock operator-(const std::chrono::duration<R, T> &interval);
+		template <typename R, typename T> EasyClock operator-=(const std::chrono::duration<R, T> &interval);
 	};
-	Clock GetCurrentTime(const int &UTC);
-
+	EasyClock GetCurrentTime(const int &UTC);
+	EasyClock HighResolutionStampToEasyClock(long long &Stamp);
+	EasyClock UnixStampToEasyClock(long long &UnixStamp);
 }
-
-namespace EasyTime
-{
-	class Duration : public frame
-	{
-	private:
-		duration<nanoseconds> duration;
-	public:
-		
-	};
-}
-
+//EasyClock templates
 namespace EasyTime
 {
 
-	/*template<typename T>
-	inline Clock EasyTime::Clock::operator+(duration<T> interval)
+	template<typename R, typename T>
+	inline EasyClock EasyTime::EasyClock::operator+(const std::chrono::duration<R, T> &interval)
 	{
-		this->SysTime += interval;
+		this->systime += interval;
 		return *this;
 	}
 
-	template<typename T>
-	Clock EasyTime::Clock::operator+=(const T &interval)
+	template<typename R, typename T>
+	EasyClock EasyTime::EasyClock::operator+=(const std::chrono::duration<R, T> &interval)
 	{
-		this->SysTime += interval;
+		this->systime += interval;
 		return *this;
-	}*/
+	}
+	
+	template<typename R, typename T>
+	inline EasyClock EasyClock::operator-(const std::chrono::duration<R, T> &interval)
+	{
+		this->systime -= interval;
+		return *this;
+	}
+	
+	template<typename R, typename T>
+	inline EasyClock EasyClock::operator-=(const std::chrono::duration<R, T> &interval)
+	{
+		this->systime -= interval;
+		return *this;
+	}
 }
+
+
+#endif

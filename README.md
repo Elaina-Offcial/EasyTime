@@ -66,6 +66,7 @@ enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Mic
 - ```cpp
   friend EasyClock GetCurrentTime(const int &UTC);//友元声明。
   ```
+<<<<<<< Updated upstream
 
 - ```cpp
   long long GetHighResolutionStamp();//获取父级EasyClock类的高精度时间戳。
@@ -95,6 +96,31 @@ enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Mic
   template <typename R, typename T> EasyClock operator-(const std::chrono::duration<R, T> &interval);
   ```
 
+=======
+  
+- ```cpp
+  long long GetHighResolutionStamp();//获取父级EasyClock类的高精度时间戳。
+  ```
+  
+- ```cpp
+  void print();//打印日历时间。
+  ```
+- ```cpp
+  void clear();//清空日历时间，清空后时间为Unix时间戳起始时间。
+  ```
+- ```cpp
+  EasyClock operator=(const EasyClock &time);//重载复制运算符。
+  ```
+- ```cpp
+  template <typename R, typename T> EasyClock operator+(const std::chrono::duration<R, T> &interval);//重载加法运算符。接受一个std::chrono::daration参数进行运算。如1s，5ns等。下列重载+=、-、-=函数与此类似，故不一一解释。
+  ```
+- ```cpp
+  template <typename R, typename T> EasyClock operator+=(const std::chrono::duration<R, T> &interval);
+  ```
+- ```cpp
+  template <typename R, typename T> EasyClock operator-(const std::chrono::duration<R, T> &interval);
+  ```
+>>>>>>> Stashed changes
 - ```cpp
   template <typename R, typename T> EasyClock operator-=(const std::chrono::duration<R, T> &interval);
   ```
@@ -104,11 +130,19 @@ enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Mic
 - ```cpp
   EasyClock GetCurrentTime(const int &UTC);//友元函数。根据传入的时区来获取当前日历时间。
   ```
+<<<<<<< Updated upstream
 
 - ```cpp
   EasyClock HighResolutionStampToEasyClock(long long &Stamp);//根据高精度时间戳转换EasyClock对象。
   ```
 
+=======
+  
+- ```cpp
+  EasyClock HighResolutionStampToEasyClock(long long &Stamp);//根据高精度时间戳转换EasyClock对象。
+  ```
+  
+>>>>>>> Stashed changes
 - ```cpp
   EasyClock UnixStampToEasyClock(long long &UnixStamp);//根据Unix时间戳转换EasyClock对象。
   ```
