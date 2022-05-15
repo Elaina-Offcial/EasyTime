@@ -91,40 +91,17 @@ enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Mic
   ```
   
 - ```cpp
-std::chrono::nanoseconds operator-(const EasyTime &time);//获取两个EasyClock的时间差，其返回值为nanoseconds类型。若需转换为其他类型，可使用duration_cast<>。
-  ```
-
-- ```cpp
-  template <typename R, typename T> EasyClock operator+(const std::chrono::duration<R, T> &interval);//重载加法运算符。接受一个std::chrono::daration参数进行运算。如1s，5ns等。下列重载+=、-、-=函数与此类似，故不一一解释。
-  ```
-
-- ```cpp
-  template <typename R, typename T> EasyClock operator+=(const std::chrono::duration<R, T> &interval);
-  ```
-
-- ```cpp
-  template <typename R, typename T> EasyClock operator-(const std::chrono::duration<R, T> &interval);
-  ```
-
-- ```cpp
-  long long GetHighResolutionStamp();//获取父级EasyClock类的高精度时间戳。
+  std::chrono::nanoseconds operator-(const EasyTime &time);//获取两个EasyClock的时间差，其返回值为nanoseconds类型。若需转换为其他类型，可使用duration_cast<>。
   ```
   
 - ```cpp
-  void print();//打印日历时间。
-  ```
-- ```cpp
-  void clear();//清空日历时间，清空后时间为Unix时间戳起始时间。
-  ```
-- ```cpp
-  EasyClock operator=(const EasyClock &time);//重载复制运算符。
-  ```
-- ```cpp
   template <typename R, typename T> EasyClock operator+(const std::chrono::duration<R, T> &interval);//重载加法运算符。接受一个std::chrono::daration参数进行运算。如1s，5ns等。下列重载+=、-、-=函数与此类似，故不一一解释。
   ```
+  
 - ```cpp
   template <typename R, typename T> EasyClock operator+=(const std::chrono::duration<R, T> &interval);
   ```
+  
 - ```cpp
   template <typename R, typename T> EasyClock operator-(const std::chrono::duration<R, T> &interval);
   ```
