@@ -24,9 +24,8 @@ void print(EasyClock c)
 }
 int main()
 {
-    long long l = 1640966400;
-    EasyClock d = UnixStampToEasyClock(l);
-    d += 8h;
-    d.print();
+    EasyClock t1 = GetCurrentTime(8);
+	EasyClock t2 = GetCurrentTime(8);
+    nanoseconds d = t2 - t1;
     return 0;
 }

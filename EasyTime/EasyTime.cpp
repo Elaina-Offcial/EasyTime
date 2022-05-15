@@ -28,7 +28,7 @@ EasyTime::EasyClock::EasyClock() : TimeFrame()
 	
 }
 
-EasyTime::EasyClock::EasyClock(const sys_time<nanoseconds> &Systime)
+EasyTime::EasyClock::EasyClock(const std::chrono::sys_time<nanoseconds> &Systime)
 {
 	std::stringstream ClockStringStream;
 	std::string date, time;
@@ -49,7 +49,7 @@ EasyTime::EasyClock::EasyClock(const sys_time<nanoseconds> &Systime)
 	};
 }
 
-EasyTime::EasyClock::EasyClock(const sys_time<nanoseconds> &Systime, const string &Year, const string &Month, const string &Day, const string &Hour, const string &Minute, const string &Second, const string &Millisecond, const string &Microsecond, const string &Nanosecond) : systime(Systime), TimeFrame(Year, Month, Day, Hour, Minute, Second, Millisecond, Microsecond, Nanosecond)
+EasyTime::EasyClock::EasyClock(const std::chrono::sys_time<nanoseconds> &Systime, const string &Year, const string &Month, const string &Day, const string &Hour, const string &Minute, const string &Second, const string &Millisecond, const string &Microsecond, const string &Nanosecond) : systime(Systime), TimeFrame(Year, Month, Day, Hour, Minute, Second, Millisecond, Microsecond, Nanosecond)
 {
 	
 }
@@ -86,11 +86,11 @@ string EasyTime::EasyClock::get(const EasyTime::Resolution &r)
 	}
 }
 
-EasyClock EasyTime::GetCurrentTime(const int &UTC)
+EasyClock EasyTime::GetCurrentTime(const int &UTCzone)
 {
 	utc_time<nanoseconds> now = utc_clock::now();
 	sys_time<nanoseconds> CurrentUTCTime = utc_clock::to_sys(now);
-	seconds UTCs{ UTC * 3600 };
+	seconds UTCs{ UTCzone * 3600 };
 	CurrentUTCTime += UTCs;
 	return EasyClock(CurrentUTCTime);
 }
@@ -139,6 +139,27 @@ void EasyTime::EasyClock::clear()
 	this->nanosecond = "000000000";
 }
 
+void EasyTime::EasyClock::RefreshTimeFromSystime()
+{
+	std::stringstream ClockStringStream;
+	std::string date, time;
+	ClockStringStream << this->systime;
+	ClockStringStream >> date >> time;
+	*this =
+	{
+		this->systime,
+		date.substr(0, 4),
+		date.substr(5, 2),
+		date.substr(8, 2),
+		time.substr(0, 2),
+		time.substr(3, 2),
+		time.substr(6, 2),
+		time.substr(9, 3),
+		time.substr(9, 6),
+		time.substr(9, 9),
+	};
+}
+
 EasyClock EasyTime::EasyClock::operator=(const EasyClock &time)
 {
 	this->systime = time.systime;
@@ -154,3 +175,12 @@ EasyClock EasyTime::EasyClock::operator=(const EasyClock &time)
 	return *this;
 }
 
+bool EasyTime::EasyClock::operator==(const EasyClock &time)
+{
+	return this->systime == time.systime ? true : false;
+}
+
+std::chrono::nanoseconds EasyTime::EasyClock::operator-(const EasyClock &time)
+{
+	return this->systime - time.systime;
+}

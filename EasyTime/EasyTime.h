@@ -40,19 +40,22 @@ namespace EasyTime
 	class EasyClock : public TimeFrame
 	{
 	private:
-		sys_time<nanoseconds> systime;
+		std::chrono::sys_time<nanoseconds> systime;
 	public:
 		EasyClock();
-		EasyClock(const sys_time<nanoseconds> &Systime);
-		EasyClock(const sys_time<nanoseconds> &Systime, const string &Year, const string &Month, const string &Day, const string &Hour, const string &Minute, const string &Second, const string &Millisecond, const string &Microsecond, const string &Nanosecond);
+		EasyClock(const std::chrono::sys_time<nanoseconds> &Systime);
+		EasyClock(const std::chrono::sys_time<nanoseconds> &Systime, const string &Year, const string &Month, const string &Day, const string &Hour, const string &Minute, const string &Second, const string &Millisecond, const string &Microsecond, const string &Nanosecond);
 		EasyClock(const EasyClock &time);
 		~EasyClock();
 		string get(const Resolution &r);
-		friend EasyClock GetCurrentTime(const int &UTC);
+		friend EasyClock GetCurrentTime(const int &UTCzone);
 		long long GetHighResolutionStamp();
 		void print();
 		void clear();
+		void RefreshTimeFromSystime();
 		EasyClock operator=(const EasyClock &time);
+		bool operator==(const EasyClock &time);
+		std::chrono::nanoseconds operator-(const EasyClock &time);
 		template <typename R, typename T> EasyClock operator+(const std::chrono::duration<R, T> &interval);
 		template <typename R, typename T> EasyClock operator+=(const std::chrono::duration<R, T> &interval);
 		template <typename R, typename T> EasyClock operator-(const std::chrono::duration<R, T> &interval);
@@ -65,7 +68,6 @@ namespace EasyTime
 //EasyClock templates
 namespace EasyTime
 {
-
 	template<typename R, typename T>
 	inline EasyClock EasyTime::EasyClock::operator+(const std::chrono::duration<R, T> &interval)
 	{

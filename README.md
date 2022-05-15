@@ -3,10 +3,10 @@
 ## 建立背景
 
 - 对于C++中时间库的使用对于新手而言有些许不便，因此设立```EasyTime```来帮助快速上手C++中对于时间的操作。
-
 - 本人在搜寻资料时许多资料曾提及使用C风格的时间函数和结构体来进行时间处理，然而却很少有关于纯C++的时间库使用教学，因此此项目也是为本人学习C++时间库而建立。
-
 - 本项目使用了在C++20中引入的```C++20 chrono::utc_clock```  ，请注意使用支持C++20的编译器。
+### 开发环境
+- 本项目在Windows环境下使用Visual Studio 2022开发。
 
 
 ## 项目内容：
@@ -78,9 +78,20 @@ enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Mic
 - ```cpp
   void clear();//清空日历时间，清空后时间为Unix时间戳起始时间。
   ```
+- ```cpp
+  void ReFreshFromSystime();//根据更新的systime来刷新时间。
+  ```
 
 - ```cpp
   EasyClock operator=(const EasyClock &time);//重载复制运算符。
+  ```
+
+- ```cpp
+  bool operator==(const EasyClock &time);//重载相等运算符。
+  ```
+  
+- ```cpp
+std::chrono::nanoseconds operator-(const EasyTime &time);//获取两个EasyClock的时间差，其返回值为nanoseconds类型。若需转换为其他类型，可使用duration_cast<>。
   ```
 
 - ```cpp
@@ -136,7 +147,6 @@ enum class Resolution { Year, Month, Day, Hour, Minute, Second, Millisecond, Mic
   EasyClock HighResolutionStampToEasyClock(long long &Stamp);//根据高精度时间戳转换EasyClock对象。
   ```
   
-
 - ```cpp
   EasyClock UnixStampToEasyClock(long long &UnixStamp);//根据Unix时间戳转换EasyClock对象。
   ```
