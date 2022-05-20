@@ -15,17 +15,17 @@ using namespace std::chrono_literals;
 
 EasyTime::TimeFrame::TimeFrame() : year("1970"), month("01"), day("01"), hour("00"), minute("00"), second("00"), millisecond("000"), microsecond("000000"), nanosecond("000000000")
 {
-	
+
 }
 
 EasyTime::TimeFrame::TimeFrame(const string Year, const string Month, const string Day, const string Hour, const string Minute, const string Second, const string Millisecond, const string Microsecond, const string Nanosecond) : year(Year), month(Month), day(Day), hour(Hour), minute(Minute), second(Second), millisecond(Millisecond), microsecond(Microsecond), nanosecond(Nanosecond)
 {
-	
+
 }
 
 EasyTime::EasyClock::EasyClock() : TimeFrame()
 {
-	
+
 }
 
 EasyTime::EasyClock::EasyClock(const std::chrono::sys_time<nanoseconds> &Systime)
@@ -36,27 +36,27 @@ EasyTime::EasyClock::EasyClock(const std::chrono::sys_time<nanoseconds> &Systime
 	ClockStringStream >> date >> time;
 	*this =
 	{
-		Systime,
-		date.substr(0, 4),
-		date.substr(5, 2),
-		date.substr(8, 2),
-		time.substr(0, 2),
-		time.substr(3, 2),
-		time.substr(6, 2),
-		time.substr(9, 3),
-		time.substr(9, 6),
-		time.substr(9, 9),
+	Systime,
+	date.substr(0, 4),
+	date.substr(5, 2),
+	date.substr(8, 2),
+	time.substr(0, 2),
+	time.substr(3, 2),
+	time.substr(6, 2),
+	time.substr(9, 3),
+	time.substr(9, 6),
+	time.substr(9, 9),
 	};
 }
 
 EasyTime::EasyClock::EasyClock(const std::chrono::sys_time<nanoseconds> &Systime, const string &Year, const string &Month, const string &Day, const string &Hour, const string &Minute, const string &Second, const string &Millisecond, const string &Microsecond, const string &Nanosecond) : systime(Systime), TimeFrame(Year, Month, Day, Hour, Minute, Second, Millisecond, Microsecond, Nanosecond)
 {
-	
+
 }
 
 EasyTime::EasyClock::EasyClock(const EasyClock &time) : systime(time.systime), TimeFrame(time.year, time.month, time.day, time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond)
 {
-	
+
 }
 
 string EasyTime::EasyClock::get(const EasyTime::Resolution &r)
@@ -95,7 +95,7 @@ EasyClock EasyTime::GetCurrentTime(const int &UTCzone)
 	return EasyClock(CurrentUTCTime);
 }
 
-EasyClock EasyTime::HighResolutionStampToEasyClock(long long &Stamp)
+EasyClock EasyTime::HighResolutionStampToEasyClock(const long long &Stamp)
 {
 	std::chrono::nanoseconds interval{ Stamp };
 	std::chrono::sys_time<nanoseconds> time;
@@ -104,7 +104,7 @@ EasyClock EasyTime::HighResolutionStampToEasyClock(long long &Stamp)
 	return clock;
 }
 
-EasyClock EasyTime::UnixStampToEasyClock(long long &UnixStamp)
+EasyClock EasyTime::UnixStampToEasyClock(const long long &UnixStamp)
 {
 	long long HighResolutionStamp = UnixStamp * 1000000000;
 	return HighResolutionStampToEasyClock(HighResolutionStamp);
@@ -122,7 +122,7 @@ void EasyTime::EasyClock::print()
 
 EasyTime::EasyClock::~EasyClock()
 {
-	
+
 }
 
 void EasyTime::EasyClock::clear()
@@ -147,16 +147,16 @@ void EasyTime::EasyClock::RefreshTimeFromSystime()
 	ClockStringStream >> date >> time;
 	*this =
 	{
-		this->systime,
-		date.substr(0, 4),
-		date.substr(5, 2),
-		date.substr(8, 2),
-		time.substr(0, 2),
-		time.substr(3, 2),
-		time.substr(6, 2),
-		time.substr(9, 3),
-		time.substr(9, 6),
-		time.substr(9, 9),
+	this->systime,
+	date.substr(0, 4),
+	date.substr(5, 2),
+	date.substr(8, 2),
+	time.substr(0, 2),
+	time.substr(3, 2),
+	time.substr(6, 2),
+	time.substr(9, 3),
+	time.substr(9, 6),
+	time.substr(9, 9),
 	};
 }
 

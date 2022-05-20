@@ -24,8 +24,11 @@ void print(EasyClock c)
 }
 int main()
 {
+    using std::cout;
+    using std::endl;
     EasyClock t1 = GetCurrentTime(8);
 	EasyClock t2 = GetCurrentTime(8);
     nanoseconds d = t2 - t1;
+    cout << d << endl;
     return 0;
 }

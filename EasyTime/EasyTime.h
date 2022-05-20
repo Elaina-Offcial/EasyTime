@@ -62,8 +62,8 @@ namespace EasyTime
 		template <typename R, typename T> EasyClock operator-=(const std::chrono::duration<R, T> &interval);
 	};
 	EasyClock GetCurrentTime(const int &UTC);
-	EasyClock HighResolutionStampToEasyClock(long long &Stamp);
-	EasyClock UnixStampToEasyClock(long long &UnixStamp);
+	EasyClock HighResolutionStampToEasyClock(const long long &Stamp);
+	EasyClock UnixStampToEasyClock(const long long &UnixStamp);
 }
 //EasyClock templates
 namespace EasyTime
@@ -71,8 +71,7 @@ namespace EasyTime
 	template<typename R, typename T>
 	inline EasyClock EasyTime::EasyClock::operator+(const std::chrono::duration<R, T> &interval)
 	{
-		this->systime += interval;
-		return *this;
+		return EasyClock(this->systime + interval);
 	}
 
 	template<typename R, typename T>
@@ -81,14 +80,13 @@ namespace EasyTime
 		this->systime += interval;
 		return *this;
 	}
-	
+
 	template<typename R, typename T>
 	inline EasyClock EasyClock::operator-(const std::chrono::duration<R, T> &interval)
 	{
-		this->systime -= interval;
-		return *this;
+		return EasyClock(this->systime - interval);
 	}
-	
+
 	template<typename R, typename T>
 	inline EasyClock EasyClock::operator-=(const std::chrono::duration<R, T> &interval)
 	{
