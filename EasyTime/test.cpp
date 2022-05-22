@@ -26,9 +26,13 @@ int main()
 {
     using std::cout;
     using std::endl;
-    EasyClock t1 = GetCurrentTime(8);
-	EasyClock t2 = GetCurrentTime(8);
-    nanoseconds d = t2 - t1;
-    cout << d << endl;
+    auto s1 = GetCurrentTime(+8);
+    auto s2 = GetCurrentTime(+8);
+    s1.print();
+    print(s1);
+    auto s3 = utc_clock::now();
+    auto s4 = utc_clock::now();
+    cout << s2 - s1 << endl;
+    cout << s4 - s3 << endl;
     return 0;
 }

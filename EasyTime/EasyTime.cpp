@@ -23,101 +23,122 @@ EasyTime::TimeFrame::TimeFrame(const string Year, const string Month, const stri
 
 }
 
-EasyTime::EasyClock::EasyClock() : TimeFrame()
+EasyTime::EasyClock::EasyClock()
 {
 
 }
 
-EasyTime::EasyClock::EasyClock(const std::chrono::sys_time<nanoseconds> &Systime)
-{
-	std::stringstream ClockStringStream;
-	std::string date, time;
-	ClockStringStream << Systime;
-	ClockStringStream >> date >> time;
-	*this =
-	{
-	Systime,
-	date.substr(0, 4),
-	date.substr(5, 2),
-	date.substr(8, 2),
-	time.substr(0, 2),
-	time.substr(3, 2),
-	time.substr(6, 2),
-	time.substr(9, 3),
-	time.substr(9, 6),
-	time.substr(9, 9),
-	};
-}
-
-EasyTime::EasyClock::EasyClock(const std::chrono::sys_time<nanoseconds> &Systime, const string &Year, const string &Month, const string &Day, const string &Hour, const string &Minute, const string &Second, const string &Millisecond, const string &Microsecond, const string &Nanosecond) : systime(Systime), TimeFrame(Year, Month, Day, Hour, Minute, Second, Millisecond, Microsecond, Nanosecond)
+EasyTime::EasyClock::EasyClock(const EasyClock &time) : UTCTime(time.UTCTime)
 {
 
 }
 
-EasyTime::EasyClock::EasyClock(const EasyClock &time) : systime(time.systime), TimeFrame(time.year, time.month, time.day, time.hour, time.minute, time.second, time.millisecond, time.microsecond, time.nanosecond)
+EasyTime::EasyClock::EasyClock(const std::chrono::utc_clock::time_point UTCTimePoint) : UTCTime(UTCTimePoint)
+{
+	
+}
+
+EasyTime::EasyClock::EasyClock(const std::chrono::utc_clock::time_point UTCTimePoint, const int UTCzone)
+{
+	this->UTCTime = UTCTimePoint + seconds{ UTCzone * 3600 };
+}
+
+EasyTime::EasyClock::EasyClock(const std::chrono::utc_time<nanoseconds> NanoUTCTime) : UTCTime(NanoUTCTime)
 {
 
 }
 
 string EasyTime::EasyClock::get(const EasyTime::Resolution &r)
 {
+	std::stringstream ClockStringStream;
+	std::string date, time;
+	ClockStringStream << this->UTCTime;
+	ClockStringStream >> date >> time;
 	switch (r)
 	{
 	case EasyTime::Resolution::Year:
-		return this->year;
+		return date.substr(0, 4);
 	case EasyTime::Resolution::Month:
-		return this->month;
+		return date.substr(5, 2);
 	case EasyTime::Resolution::Day:
-		return this->day;
+		return date.substr(8, 2);
 	case EasyTime::Resolution::Hour:
-		return this->hour;
+		return time.substr(0, 2);
 	case EasyTime::Resolution::Minute:
-		return this->minute;
+		return time.substr(3, 2);
 	case EasyTime::Resolution::Second:
-		return this->second;
+		return time.substr(6, 2);
 	case EasyTime::Resolution::Millisecond:
-		return this->millisecond;
+		return time.substr(9, 3);
 	case EasyTime::Resolution::Microsecond:
-		return this->microsecond;
+		return time.substr(9, 6);
 	case EasyTime::Resolution::Nanosecond:
-		return this->nanosecond;
+		return time.substr(9, 9);
 	default:
-		return "wtf";
+		std::cout << "Error: Invalid Resolution" << std::endl; return "";
 	}
+}
+
+string EasyTime::GetCurrentStringTime(const int &UTCZone)
+{
+	std::stringstream ClockStringStream;
+	std::string date, time;
+	ClockStringStream << utc_clock::now();
+	ClockStringStream >> date >> time;
+	return date + " " + time + "00";
 }
 
 EasyClock EasyTime::GetCurrentTime(const int &UTCzone)
 {
-	utc_time<nanoseconds> now = utc_clock::now();
-	sys_time<nanoseconds> CurrentUTCTime = utc_clock::to_sys(now);
-	seconds UTCs{ UTCzone * 3600 };
-	CurrentUTCTime += UTCs;
-	return EasyClock(CurrentUTCTime);
+	utc_time<nanoseconds> CurrentUTCTime = utc_clock::now();
+	return EasyClock(CurrentUTCTime + seconds{ UTCzone * 3600 });
+}
+
+void EasyTime::PrintCurrentTime(const int &UTCzone)
+{
+	auto CurrentUTCTime = std::chrono::utc_clock::now();
+	std::cout << CurrentUTCTime + seconds{ UTCzone * 3600 };
 }
 
 EasyClock EasyTime::HighResolutionStampToEasyClock(const long long &Stamp)
 {
-	std::chrono::nanoseconds interval{ Stamp };
-	std::chrono::sys_time<nanoseconds> time;
-	time += interval;
-	EasyTime::EasyClock clock(time);
-	return clock;
+	std::chrono::utc_time<nanoseconds> time;
+	return EasyTime::EasyClock(time + std::chrono::nanoseconds{ Stamp });
 }
 
 EasyClock EasyTime::UnixStampToEasyClock(const long long &UnixStamp)
 {
-	long long HighResolutionStamp = UnixStamp * 1000000000;
+	long long HighResolutionStamp = UnixStamp * 1000000000;//10^9
 	return HighResolutionStampToEasyClock(HighResolutionStamp);
 }
 
 long long EasyTime::EasyClock::GetHighResolutionStamp()
 {
-	return this->systime.time_since_epoch().count();
+	auto LeapSeconds = std::chrono::get_leap_second_info(this->UTCTime).elapsed;
+	return (this->UTCTime - LeapSeconds).time_since_epoch().count();
+}
+
+long long EasyTime::EasyClock::GetUnixStamp()
+{
+	auto LeapSeconds = std::chrono::get_leap_second_info(this->UTCTime).elapsed;
+	return (this->UTCTime - LeapSeconds).time_since_epoch().count() / 1000000000;
+}
+
+long long EasyTime::GetCurrentHighResolutionStamp()
+{
+	auto LeapSeconds = std::chrono::get_leap_second_info(std::chrono::utc_clock::now()).elapsed;
+	return (std::chrono::utc_clock::now() - LeapSeconds).time_since_epoch().count();
+}
+
+long long EasyTime::GetCurrentUnixStamp()
+{
+	auto LeapSeconds = std::chrono::get_leap_second_info(std::chrono::utc_clock::now()).elapsed;
+	return (std::chrono::utc_clock::now() - LeapSeconds).time_since_epoch().count() / 10000000;
 }
 
 void EasyTime::EasyClock::print()
 {
-	std::cout << this->systime << std::endl;
+	std::cout << this->UTCTime << std::endl;
 }
 
 EasyTime::EasyClock::~EasyClock()
@@ -127,60 +148,21 @@ EasyTime::EasyClock::~EasyClock()
 
 void EasyTime::EasyClock::clear()
 {
-	this->systime -= nanoseconds{ this->systime.time_since_epoch() };
-	this->year = "1970";
-	this->month = "01";
-	this->day = "01";
-	this->hour = "00";
-	this->minute = "00";
-	this->second = "00";
-	this->millisecond = "000";
-	this->microsecond = "000000";
-	this->nanosecond = "000000000";
-}
-
-void EasyTime::EasyClock::RefreshTimeFromSystime()
-{
-	std::stringstream ClockStringStream;
-	std::string date, time;
-	ClockStringStream << this->systime;
-	ClockStringStream >> date >> time;
-	*this =
-	{
-	this->systime,
-	date.substr(0, 4),
-	date.substr(5, 2),
-	date.substr(8, 2),
-	time.substr(0, 2),
-	time.substr(3, 2),
-	time.substr(6, 2),
-	time.substr(9, 3),
-	time.substr(9, 6),
-	time.substr(9, 9),
-	};
+	this->UTCTime -= nanoseconds{ this->UTCTime.time_since_epoch() };
 }
 
 EasyClock EasyTime::EasyClock::operator=(const EasyClock &time)
 {
-	this->systime = time.systime;
-	this->year = time.year;
-	this->month = time.month;
-	this->day = time.day;
-	this->hour = time.hour;
-	this->minute = time.minute;
-	this->second = time.second;
-	this->millisecond = time.millisecond;
-	this->microsecond = time.microsecond;
-	this->nanosecond = time.nanosecond;
+	this->UTCTime = time.UTCTime;
 	return *this;
 }
 
 bool EasyTime::EasyClock::operator==(const EasyClock &time)
 {
-	return this->systime == time.systime ? true : false;
+	return this->UTCTime == time.UTCTime ? true : false;
 }
 
 std::chrono::nanoseconds EasyTime::EasyClock::operator-(const EasyClock &time)
 {
-	return this->systime - time.systime;
+	return this->UTCTime - time.UTCTime;
 }
