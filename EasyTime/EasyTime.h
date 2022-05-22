@@ -44,9 +44,9 @@ namespace EasyTime
 	public:
 		EasyClock();
 		EasyClock(const EasyClock &time);
-		EasyClock(const std::chrono::utc_clock::time_point UTCTimePoint);
-		EasyClock(const std::chrono::utc_clock::time_point UTCTimePoint, const int UTCzone);
-		EasyClock(const std::chrono::utc_time<nanoseconds> NanoUTCTime);
+		EasyClock(const std::chrono::utc_clock::time_point &UTCTimePoint);
+		EasyClock(const std::chrono::utc_clock::time_point &UTCTimePoint, const int &UTCzone);
+		EasyClock(const std::chrono::utc_time<nanoseconds> &NanoUTCTime);
 		~EasyClock();
 		string get(const Resolution &r);
 		long long GetHighResolutionStamp();

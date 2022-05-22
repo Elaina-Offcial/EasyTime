@@ -33,17 +33,17 @@ EasyTime::EasyClock::EasyClock(const EasyClock &time) : UTCTime(time.UTCTime)
 
 }
 
-EasyTime::EasyClock::EasyClock(const std::chrono::utc_clock::time_point UTCTimePoint) : UTCTime(UTCTimePoint)
+EasyTime::EasyClock::EasyClock(const std::chrono::utc_clock::time_point &UTCTimePoint) : UTCTime(UTCTimePoint)
 {
 	
 }
 
-EasyTime::EasyClock::EasyClock(const std::chrono::utc_clock::time_point UTCTimePoint, const int UTCzone)
+EasyTime::EasyClock::EasyClock(const std::chrono::utc_clock::time_point &UTCTimePoint, const int &UTCzone)
 {
 	this->UTCTime = UTCTimePoint + seconds{ UTCzone * 3600 };
 }
 
-EasyTime::EasyClock::EasyClock(const std::chrono::utc_time<nanoseconds> NanoUTCTime) : UTCTime(NanoUTCTime)
+EasyTime::EasyClock::EasyClock(const std::chrono::utc_time<nanoseconds> &NanoUTCTime) : UTCTime(NanoUTCTime)
 {
 
 }
